@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
-export default function InputData({ firebase }) {
+export default function InputData({ firebase, navigation }) {
   const [posisiMarker, setPosisiMarker] = useState(null);
   const [marker, setMarker] = useState(null);
   const [nim, setNim] = useState(null);
@@ -38,10 +38,47 @@ export default function InputData({ firebase }) {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
+        showsPointsOfInterest={false}
         onPress={(e) => {
           console.log("di on press", e.nativeEvent.coordinate);
           setPosisiMarker(e.nativeEvent.coordinate);
         }}
+        customMapStyle={[
+          {
+            featureType: "administrative",
+            elementType: "geometry",
+            stylers: [
+              {
+                visibility: "off",
+              },
+            ],
+          },
+          {
+            featureType: "poi",
+            stylers: [
+              {
+                visibility: "off",
+              },
+            ],
+          },
+          {
+            featureType: "road",
+            elementType: "labels.icon",
+            stylers: [
+              {
+                visibility: "off",
+              },
+            ],
+          },
+          {
+            featureType: "transit",
+            stylers: [
+              {
+                visibility: "off",
+              },
+            ],
+          },
+        ]}
         style={styles.map}
       >
         {marker}
@@ -76,7 +113,10 @@ export default function InputData({ firebase }) {
           newTitikRef.set({
             posisiMarker,
             nim,
+            umur: "12 Tahun",
+            ready: true,
           });
+          navigation.goBack();
         }}
       />
     </View>

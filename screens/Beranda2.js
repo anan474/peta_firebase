@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Dimensions, Button } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
-export default function Beranda({ firebase, navigation }) {
+export default function Beranda2({ firebase, navigation }) {
   const [dataMarker, setDataMarker] = useState([]);
 
   const [marker, setMarker] = useState([]);
@@ -19,7 +19,7 @@ export default function Beranda({ firebase, navigation }) {
 
   useEffect(() => {
     console.log(dataMarker);
-    const data_difilter = dataMarker.filter((data) => data.ready);
+    const data_difilter = dataMarker.filter((data) => !data.ready);
     const komponenMarker = data_difilter.map((data, idx) => {
       return (
         <Marker
