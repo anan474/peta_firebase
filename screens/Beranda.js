@@ -1,8 +1,40 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Dimensions, Button } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
-export default function Beranda() {
+export default function Beranda({ firebase }) {
+  const [dataMarker, setDataMarker] = useState([]);
+
+  const [marker, setMarker] = useState([]);
+
+  // mengambil data dari firebase dan masukkan ke var dataMarker
+  useEffect(() => {
+    var titikRef = firebase.database().ref("titik");
+    titikRef.on("value", (snapshot) => {
+      const data = snapshot.val();
+      console.log(Object.values(data));
+      setDataMarker(Object.values(data));
+    });
+  }, []);
+
+  useEffect(() => {
+    console.log(dataMarker);
+    const data_difilter = dataMarker.filter((data) => data.ready);
+    const komponenMarker = data_difilter.map((data, idx) => {
+      return (
+        <Marker
+          key={idx}
+          coordinate={{
+            latitude: data.posisiMarker.latitude,
+            longitude: data.posisiMarker.longitude,
+          }}
+          title={data.nim}
+        />
+      );
+    });
+    setMarker(komponenMarker);
+  }, [dataMarker]);
+
   return (
     <View style={styles.container}>
       <Text>Halaman Beranda</Text>
@@ -15,18 +47,7 @@ export default function Beranda() {
         }}
         style={styles.map}
       >
-        <Marker
-          coordinate={{ latitude: -0.0263, longitude: 109.3424 }}
-          title="MHS NIM D1041151018"
-        />
-        <Marker
-          coordinate={{ latitude: -0.02641, longitude: 109.3422 }}
-          title="MHS NIM D1041151050"
-        />
-        <Marker
-          coordinate={{ latitude: -0.02636, longitude: 109.3324 }}
-          title="MHS NIM D1041151078"
-        />
+        {marker}
       </MapView>
       <Button title="Input Data Baru" />
     </View>

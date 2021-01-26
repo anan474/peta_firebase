@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 
-export default function InputData() {
+export default function InputData({ firebase }) {
   const [posisiMarker, setPosisiMarker] = useState(null);
   const [marker, setMarker] = useState(null);
   const [nim, setNim] = useState(null);
@@ -67,6 +67,13 @@ export default function InputData() {
         title="Simpan"
         onPress={() => {
           console.log("data yg akan dikirim", {
+            posisiMarker,
+            nim,
+          });
+
+          var titikListRef = firebase.database().ref("titik");
+          var newTitikRef = titikListRef.push();
+          newTitikRef.set({
             posisiMarker,
             nim,
           });
